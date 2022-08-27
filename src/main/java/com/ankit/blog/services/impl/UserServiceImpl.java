@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 
-	private UserDto user2UserDto(User user) {
+	public UserDto user2UserDto(User user) {
 		return this.modelMapper.map(user, UserDto.class);
 
 		/*
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 		 */
 	}
 
-	private User userDto2User(UserDto userDto) {
+	public User userDto2User(UserDto userDto) {
 		return this.modelMapper.map(userDto, User.class);
 	}
 }

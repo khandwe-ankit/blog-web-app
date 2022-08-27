@@ -63,11 +63,11 @@ public class CategoryServiceImpl implements CategoryService {
 		this.categoryRepo.delete(fetchedcategory);
 	}
 
-	private CategoryDto category2CategoryDto(Category category) {
+	public  CategoryDto category2CategoryDto(Category category) {
 		return this.modelMapper.map(category, CategoryDto.class);
 	}
 
-	private Category categoryDto2Category(CategoryDto categoryDto) {
+	public Category categoryDto2Category(CategoryDto categoryDto) {
 		return this.modelMapper.map(categoryDto, Category.class);
 	}
 }
