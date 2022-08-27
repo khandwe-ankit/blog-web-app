@@ -2,6 +2,8 @@ package com.ankit.blog.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,13 +40,13 @@ public class UserController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
 		UserDto createdUser = this.userService.createUser(userDto);
 		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id, @RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id, @Valid @RequestBody UserDto userDto) {
 		UserDto updatedUser = this.userService.updateUser(userDto, id);
 		return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 	}
@@ -52,6 +54,7 @@ public class UserController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ApiResponse> deleteUserById(@PathVariable(name = "id") Long id) {
 		this.userService.deleteUserById(id);
-		return new ResponseEntity<ApiResponse>(new ApiResponse("User deleted successfully by id: "+id, true), HttpStatus.OK);
+		return new ResponseEntity<>(new ApiResponse("User deleted successfully by id: " + id, true),
+		        HttpStatus.OK);
 	}
 }
