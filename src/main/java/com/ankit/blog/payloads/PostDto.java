@@ -5,9 +5,6 @@ import java.util.Date;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.ankit.blog.entitys.Category;
-import com.ankit.blog.entitys.User;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,7 +12,7 @@ import lombok.Setter;
 @Setter
 public class PostDto {
 
-//	private long id;
+	private long id;
 
 	@NotBlank
 	@Size(max = 100)
@@ -24,13 +21,13 @@ public class PostDto {
 	@NotBlank
 	@Size(max = 1000)
 	private String content;
-	
+
 	private String imageName;
 
 	private Date postDateTime;
 
-	private Category category;
+	private CategoryDto category;
 
-	private User user;
+	private UserDto user;
 
 }

@@ -26,7 +26,7 @@ public class CategoryController {
 
 	@Autowired
 	CategoryService categoryService;
-	
+
 	@GetMapping("/")
 	public ResponseEntity<List<CategoryDto>> getCategory() {
 		List<CategoryDto> allCategory = this.categoryService.getAllCategories();
@@ -46,7 +46,8 @@ public class CategoryController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<CategoryDto> updateCategory(@PathVariable(name = "id") Long id, @Valid @RequestBody CategoryDto categoryDto) {
+	public ResponseEntity<CategoryDto> updateCategory(@PathVariable(name = "id") Long id, @Valid
+	@RequestBody CategoryDto categoryDto) {
 		CategoryDto updatedCategory = this.categoryService.updateCategory(categoryDto, id);
 		return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
 	}
@@ -54,7 +55,7 @@ public class CategoryController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<ApiResponse> deleteCategoryById(@PathVariable(name = "id") Long id) {
 		this.categoryService.deleteCategory(id);
-		return new ResponseEntity<>(new ApiResponse("Category deleted successfully by id: " + id, true),
+		return new ResponseEntity<>(new ApiResponse("Category deleted successfully", true),
 		        HttpStatus.OK);
 	}
 }
