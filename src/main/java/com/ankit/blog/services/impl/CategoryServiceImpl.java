@@ -7,7 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ankit.blog.config.ConstantsAndLiterals;
+import com.ankit.blog.config.AppConstant;
 import com.ankit.blog.entitys.Category;
 import com.ankit.blog.exceptions.ResourceNotFoundException;
 import com.ankit.blog.payloads.CategoryDto;
@@ -42,15 +42,23 @@ public class CategoryServiceImpl implements CategoryService {
 
 		return this.category2CategoryDto(
 		        this.categoryRepo.findById(id)
-		                .orElseThrow(() -> new ResourceNotFoundException(ConstantsAndLiterals.CATEGORY_LOWERCASE,
-		                        ConstantsAndLiterals.CATEGORY_ID, id)));
+		                .orElseThrow(() -> new ResourceNotFoundException(AppConstant.CATEGORY_LOWERCASE,
+		                        AppConstant.CATEGORY_ID, id)));
+	}
+
+	@Override
+	public List<CategoryDto> searchCategoriesByName(String categoryTitle) {
+		return this.categoryRepo.findByTitleContaining(categoryTitle)
+		        .stream()
+		        .map(this::category2CategoryDto)
+		        .collect(Collectors.toList());
 	}
 
 	@Override
 	public CategoryDto updateCategory(CategoryDto categoryDto, Long id) {
 		Category category = this.categoryDto2Category(categoryDto);
 		Category fetchedcategory = this.categoryRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-		        ConstantsAndLiterals.CATEGORY_LOWERCASE, ConstantsAndLiterals.CATEGORY_ID, id));
+		        AppConstant.CATEGORY_LOWERCASE, AppConstant.CATEGORY_ID, id));
 		fetchedcategory.setTitle(category.getTitle());
 		fetchedcategory.setDescription(category.getDescription());
 		return this.category2CategoryDto(this.categoryRepo.saveAndFlush(fetchedcategory));
@@ -59,15 +67,18 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public void deleteCategory(Long id) {
 		Category fetchedcategory = this.categoryRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException(
-		        ConstantsAndLiterals.CATEGORY_LOWERCASE, ConstantsAndLiterals.CATEGORY_ID, id));
+		        AppConstant.CATEGORY_LOWERCASE, AppConstant.CATEGORY_ID, id));
 		this.categoryRepo.delete(fetchedcategory);
 	}
 
-	public  CategoryDto category2CategoryDto(Category category) {
+	@Override
+	public CategoryDto category2CategoryDto(Category category) {
 		return this.modelMapper.map(category, CategoryDto.class);
 	}
 
+	@Override
 	public Category categoryDto2Category(CategoryDto categoryDto) {
 		return this.modelMapper.map(categoryDto, Category.class);
 	}
+
 }

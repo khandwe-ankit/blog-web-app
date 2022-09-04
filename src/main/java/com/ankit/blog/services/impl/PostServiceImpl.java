@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import com.ankit.blog.entitys.Category;
@@ -13,6 +17,7 @@ import com.ankit.blog.entitys.Post;
 import com.ankit.blog.entitys.User;
 import com.ankit.blog.exceptions.ResourceNotFoundException;
 import com.ankit.blog.payloads.PostDto;
+import com.ankit.blog.payloads.PostResponse;
 import com.ankit.blog.repositories.PostRepo;
 import com.ankit.blog.services.CategoryService;
 import com.ankit.blog.services.PostService;
@@ -36,10 +41,9 @@ public class PostServiceImpl implements PostService {
 		Category categoryById = this.categoryService.categoryDto2Category(this.categoryService.getCategoryById(
 		        categoryId));
 		Post post = this.postDto2Post(postDto);
-		post.setImageName("default_" + new Date().getTime() + ".png");
 		post.setUser(userById);
 		post.setCategory(categoryById);
-		post.setPostDateTime(new Date());
+		post.setDate(new Date());
 		return this.post2PostDto(this.postRepo.save(post));
 
 	}
@@ -51,12 +55,33 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> getAllPosts() {
-		return this.postRepo
-		        .findAll()
-		        .stream()
-		        .map(this::post2PostDto)
-		        .collect(Collectors.toList());
+	public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sort, String sortBy) {
+		Pageable pageableRequest = PageRequest.of(pageNumber, pageSize, sort.equalsIgnoreCase("desc") ? Direction.DESC
+		        : Direction.ASC, sortBy);
+		Page<Post> allPosts = this.postRepo.findAll(pageableRequest);
+		List<Post> posts = allPosts.getContent();
+		long totalPost = allPosts.getTotalElements();
+		int totalPages = allPosts.getTotalPages();
+		int currentPage = allPosts.getNumber();
+		List<PostDto> postList = posts.stream().map(this::post2PostDto).collect(Collectors.toList());
+
+//		Map<String, Object> map = new LinkedHashMap<>();
+//		map.put("total-post", totalPost);
+//		map.put("total-pages", totalPages);
+//		map.put("current-page", currentPage + 1);
+//		map.put("page-size", pageSize);
+//		map.put("last-page", Objects.equals(totalPages, currentPage + 1));
+//		map.put("data", postList);
+//		return map;
+
+		PostResponse postResponse = new PostResponse();
+		postResponse.setTotalPosts(totalPost);
+		postResponse.setTotalPage(totalPages);
+		postResponse.setCurrentPage(currentPage);
+		postResponse.setPageSize(pageSize);
+		postResponse.setLastPage(totalPages == currentPage + 1);
+		postResponse.setData(postList);
+		return postResponse;
 	}
 
 	@Override
@@ -65,10 +90,10 @@ public class PostServiceImpl implements PostService {
 		Post newPost = this.postDto2Post(postDto);
 		oldPost.setContent(newPost.getContent());
 		oldPost.setImageName(newPost.getImageName());
-		oldPost.setPostDateTime(new Date());
+		oldPost.setDate(new Date());
 		oldPost.setTitle(newPost.getTitle());
 		return this.post2PostDto(this.postRepo.save(oldPost));
-		
+
 	}
 
 	@Override
@@ -98,9 +123,11 @@ public class PostServiceImpl implements PostService {
 	}
 
 	@Override
-	public List<PostDto> searchPostByCategory(Category category) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<PostDto> searchPostByPostTitle(String postTitle) {
+		return this.postRepo.findByTitleContaining(postTitle)
+		        .stream()
+		        .map(this::post2PostDto)
+		        .collect(Collectors.toList());
 	}
 
 	@Override

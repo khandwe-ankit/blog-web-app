@@ -23,4 +23,6 @@ public interface CategoryService {
 
 	CategoryDto category2CategoryDto(Category category);
 
+	List<CategoryDto> searchCategoriesByName(String categoryTitle);
+
 }

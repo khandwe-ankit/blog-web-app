@@ -1,6 +1,8 @@
 package com.ankit.blog.payloads;
 
+import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -24,10 +26,14 @@ public class PostDto {
 
 	private String imageName;
 
-	private Date postDateTime;
+	private Date date;
+
+	private Timestamp lastUpdatedOn;
 
 	private CategoryDto category;
 
 	private UserDto user;
+
+	private Set<CommentDto> comments;
 
 }

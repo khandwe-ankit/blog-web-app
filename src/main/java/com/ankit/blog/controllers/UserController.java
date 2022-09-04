@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ankit.blog.payloads.ApiResponse;
 import com.ankit.blog.payloads.UserDto;
+import com.ankit.blog.payloads.UserDtoWithPassword;
 import com.ankit.blog.services.UserService;
 
 @RestController
@@ -40,13 +41,15 @@ public class UserController {
 	}
 
 	@PostMapping("/")
-	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDtoWithPassword userDto) {
 		UserDto createdUser = this.userService.createUser(userDto);
 		return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> updateUser(@PathVariable(name = "id") Long id, @Valid @RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> updateUser(
+	        @PathVariable(name = "id") Long id,
+	        @Valid @RequestBody UserDtoWithPassword userDto) {
 		UserDto updatedUser = this.userService.updateUser(userDto, id);
 		return new ResponseEntity<>(updatedUser, HttpStatus.OK);
 	}

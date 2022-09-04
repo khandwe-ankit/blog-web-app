@@ -2,18 +2,18 @@ package com.ankit.blog.services;
 
 import java.util.List;
 
-import com.ankit.blog.entitys.Category;
 import com.ankit.blog.entitys.Post;
 import com.ankit.blog.payloads.PostDto;
+import com.ankit.blog.payloads.PostResponse;
 
 public interface PostService {
 
 	// CRUD
 	PostDto createPost(PostDto postDto, Long userId, Long categoryId);
 
-	PostDto getPostById(Long Id);
+	PostDto getPostById(Long id);
 
-	List<PostDto> getAllPosts();
+	PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sort, String sortBy);
 
 	PostDto updatePost(PostDto postDto, Long id);
 
@@ -23,10 +23,10 @@ public interface PostService {
 
 	List<PostDto> getPostByUserId(Long id);
 
-	List<PostDto> searchPostByCategory(Category category);
-
 	PostDto post2PostDto(Post post);
 
 	Post postDto2Post(PostDto postDto);
+
+	List<PostDto> searchPostByPostTitle(String postTitle);
 
 }

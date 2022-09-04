@@ -2,6 +2,7 @@ package com.ankit.blog.payloads;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import com.ankit.blog.config.AppConstant;
@@ -11,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserDto {
+public class UserDtoWithPassword {
 
 	private Long id;
 
@@ -24,8 +25,8 @@ public class UserDto {
 
 	@NotBlank
 //	@Size(min = AppConstant.PASSWORD_MIN_LENGTH, max = AppConstant.PASSWORD_MAX_LENGTH)
-//	@Pattern(regexp = AppConstant.PASSWORD_REGEX, message = AppConstant.USER_PASSWORD_VALIDATION_FAILED_MSG)
-//	private String password;
+	@Pattern(regexp = AppConstant.PASSWORD_REGEX, message = AppConstant.USER_PASSWORD_VALIDATION_FAILED_MSG)
+	private String password;
 
 	@NotBlank
 	private String about;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ankit.blog.entitys.User;
 import com.ankit.blog.exceptions.ResourceNotFoundException;
 import com.ankit.blog.payloads.UserDto;
+import com.ankit.blog.payloads.UserDtoWithPassword;
 import com.ankit.blog.repositories.UserRepo;
 import com.ankit.blog.services.UserService;
 
@@ -23,14 +24,14 @@ public class UserServiceImpl implements UserService {
 	ModelMapper modelMapper;
 
 	@Override
-	public UserDto createUser(UserDto userDto) {
-		User user = this.userDto2User(userDto);
+	public UserDto createUser(UserDtoWithPassword userDto) {
+		User user = this.modelMapper.map(userDto, User.class);
 		User savedUser = this.userRepo.save(user);
 		return this.user2UserDto(savedUser);
 	}
 
 	@Override
-	public UserDto updateUser(UserDto userDto, Long id) {
+	public UserDto updateUser(UserDtoWithPassword userDto, Long id) {
 		User user = this.userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "user Id", id));
 		user.setAbout(userDto.getAbout());
 		user.setEmail(userDto.getEmail());
@@ -63,6 +64,7 @@ public class UserServiceImpl implements UserService {
 
 	}
 
+	@Override
 	public UserDto user2UserDto(User user) {
 		return this.modelMapper.map(user, UserDto.class);
 
@@ -74,6 +76,7 @@ public class UserServiceImpl implements UserService {
 		 */
 	}
 
+	@Override
 	public User userDto2User(UserDto userDto) {
 		return this.modelMapper.map(userDto, User.class);
 	}
